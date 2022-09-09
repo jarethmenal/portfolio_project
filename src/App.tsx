@@ -1,24 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
 import './App.css';
 
+const USERS_QUERY = `
+{
+  getAllUsers {
+    name
+    id
+  }
+}
+`
+
 function App() {
+
+  const [users, setUsers] = useState()
+
+  useEffect(()=>{
+    fetch('https://portfolio-project1-backend.herokuapp.com/graphql',
+    {
+      method: 'POST',
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({query: USERS_QUERY})
+    }).then(res => res.json()).then(procRes => setUsers(procRes.data.getAllUsers))
+  }, [])
+
+  useEffect (()=>{
+    console.log(users)
+  },[users])
+  
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      
     </div>
   );
 }
