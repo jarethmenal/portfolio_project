@@ -1,22 +1,42 @@
-import React, { FormEvent,Fragment,useState} from 'react'
+import React, { FormEvent,Fragment,MouseEventHandler,ReactElement,useEffect,useState} from 'react'
 import'./styles/start.scss'
 import { faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import fetchOnDemand from '../functions/fetchOnDemand';
+import fetchImageList from '../functions/fetchImageList';
+import CloudCarousel from '../components/CloudCarousel';
+import Card from 'react-bootstrap/Card';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 
+interface formType {
+  [key:string]:any ;
+}
 
 const Start = () => {
     
-  const [mode, setMode] = useState<String>('login');
+  const [mode, setMode] = useState<string>('login');
   const [visibility, setVisibility] = useState<Boolean>(false);
   const [input, setInput] = useState<inputData>({input1:'',input2:''});
   const [error, setError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [bgImgs, setBgImgs] = useState<string[]| null>(null);
 
   const updateInputs = (where:string, data:string) => {
     setInput(prev => ({
         ...prev, [where]:data
     }))
+  }
+
+  useEffect(()=>{
+    getImageList();
+  }, [])
+  
+  const getImageList = async() => {
+    const imgs = await fetchImageList('start');
+    setBgImgs(imgs.data.getImageCollection);
   }
 
   const resetInputs = () => {
@@ -34,8 +54,7 @@ const Start = () => {
     setVisibility(prev => !prev);
   }
     
-  const loginHandler = async(event: FormEvent) => {
-    event.preventDefault();
+  const loginHandler = async() => {
     const resp = await fetchOnDemand({inQuery: loginQuery(input.input1, input.input2), header: headers});
     if (resp.errors){
       setError(resp.errors.message)
@@ -44,7 +63,7 @@ const Start = () => {
     setError(null)
   }
 
-  const registerHandler = async(event: FormEvent) => {
+  const registerHandler = async() => {
     const resp = await fetchOnDemand({inQuery: sendRegisterLink(input.input2), header: headers});
       if (resp.errors){
         setFeedback(null)
@@ -56,6 +75,7 @@ const Start = () => {
   }
 
   const recoverHandler = async(event: FormEvent) => {
+    event.preventDefault();
     const resp = await fetchOnDemand({inQuery: sendRecoveryLink(input.input2), header: headers});
       if (resp.errors){
         setFeedback(null)
@@ -66,137 +86,114 @@ const Start = () => {
       setFeedback(resp.data.sendRecoveryLink)
   }
 
-  const registerForm = () => {
-    return <div className="input-group input-separation-start">
-    <div className='form-floating'> 
-      
-      <input 
-      value={input.input2}
-      onChange={e=>updateInputs('input2',e.target.value)}
-      type={'text'}
-      className="form-control" 
-      placeholder="This is a Placeholder"
-      />
-      
-      <label htmlFor="input2" className='start-label' >{'New Email'}</label>
-    
-    </div>
-    
-    <button onClick={registerHandler} className="btn btn-primary btn-assist" type="button">
-      {`Send Registration`}
-    </button>
-  </div> 
+  interface modeVariantData {
+    handler: any,
+    welcomeMsg: string,
+    secondaryBtnContent: ReactElement<any, any> | string ,
+    secondaryInLabel: string,
+    secondaryType: string,
+    index:number
   }
+
+  interface modeTypes {
+    [name:string]:modeVariantData
+  }
+
+  const formModeVariant:modeTypes = {
+    'login': {
+      'handler': visibilityHandler, 
+      'welcomeMsg': 'Welcome back!', 
+      'secondaryBtnContent':<>{visibility ? <FontAwesomeIcon size='1x' icon={faEye}/>:<FontAwesomeIcon size='1x' icon={faEyeSlash}/>}</>,
+      'secondaryInLabel': 'Password',
+      'secondaryType':!visibility ? 'password' : 'text',
+      'index':1},
     
-  const loginForm = () => {
+    'register': {
+      'handler':registerHandler,
+      'welcomeMsg':`First time? Let's get started!`,
+      'secondaryBtnContent':'Send Register Link',
+      'secondaryInLabel':'New Email',
+      'secondaryType': 'text',
+      'index':2},
+
+    'recover': {
+      'handler':recoverHandler,
+      'welcomeMsg':'Forgot your password? Let us help you.',
+      'secondaryBtnContent':'Send Recover Link',
+      'secondaryInLabel':'Registered Email',
+      'secondaryType': 'text',
+      'index':0}
+  }
+
+  const modeData:modeVariantData = formModeVariant[mode];
+
+  const startForm = () => {
     return (     
-    <Fragment>              
-      <div className='form-floating input-separation-start'>     
-        <input
-            onChange={e => updateInputs('input1',e.target.value)} 
-            value={input.input1} 
-            type="text"  
-            id="input1" 
-            placeholder="Enter email."
-            className='input_start form-control'
-        />
-        <label htmlFor="input1" className='start-label'>Email address</label>
-      </div>
-    
-      <div className="input-group input-separation-start">
-        <div className='form-floating'> 
-          <input 
-          value={input.input2}
-          onChange={e=>updateInputs('input2',e.target.value)}
-          type={!visibility ? 'password' : 'text'}
-          className="form-control" 
-          placeholder="This is a Placeholder"
-          />
-          <label htmlFor="input2" className='start-label' >{'Password'}</label>
-        </div>
+    <Form onSubmit={e => e.preventDefault()}>
+
+      {mode==='login' && <FloatingLabel controlId='input1' label='Email Address'>
+        <Form.Control 
+          type='text' 
+          placeholder=' ' 
+          onChange={e => updateInputs('input1',e.target.value)} 
+          value={input.input1}
+          className='input_start'/>
+      </FloatingLabel>}
       
-        <button onClick={visibilityHandler} className="btn btn-primary btn-assist" type="button">
-          {visibility ? <FontAwesomeIcon size='1x' icon={faEye}/>:<FontAwesomeIcon size='1x' icon={faEyeSlash}/>}
-        </button>
-      </div>
-    </Fragment>)
-    }
-
-    const recoverForm = () => {
-      return <div className="input-group input-separation-start">
-    <div className='form-floating'> 
-      
-      <input 
-      value={input.input2}
-      onChange={e=>updateInputs('input2',e.target.value)}
-      type={'text'}
-      className="form-control" 
-      placeholder="This is a Placeholder"
-      />
-      
-      <label htmlFor="input2" className='start-label' >{'Registered Email'}</label>
+      <InputGroup className="input-separation-start">    
+        <FloatingLabel controlId='input2' label={modeData.secondaryInLabel}>
+          <Form.Control 
+            type={modeData.secondaryType} 
+            placeholder=' ' 
+            onChange={e => updateInputs('input2',e.target.value)} 
+            value={input.input2}
+            className='input_start'/>
+        </FloatingLabel>
+        <Button onClick={modeData.handler} className="input-assist-button" type="button">
+          {modeData.secondaryBtnContent}
+        </Button>
+      </InputGroup>
     
-    </div>
-    
-    <button onClick={recoverHandler} className="btn btn-primary btn-assist" type="button">
-      {`Send Recover Email`}
-    </button>
-  </div> 
+    </Form>)
     }
     
-    interface formType {
-      [key:string]:any ;
-    }
-
-    const getFormType:formType = {
-      'login': loginForm(),
-      'register': registerForm(),
-      'recover': recoverForm()
-    };
-
-    const welcomeMessages:{[key:string]:string} = {
-      'login': 'Welcome back!',
-      'register': `First time? Let's get started!`,
-      'recover': 'Forgot your password? Let us help you.'
-    }
-
-    const startOptions = () => {
+    const bottomStartCard = () => {
     return <div className={`options_container_${mode}`}>
         <div className={'left'}>
           {mode === 'login' &&
-            <button onClick={loginHandler} className={'btn-go btn '}>Log In</button>
+            <Button onClick={loginHandler} className={'btn-go btn '}>Log In</Button>
           }
         </div>
         <div className={'right'}>
-          <button className={'btn btn-start-mode'} onClick={e => modeHandler(mode === 'login' ? 'register' : 'login')}>
+          <Button className={'btn btn-start-mode'} onClick={e => modeHandler(mode === 'login' ? 'register' : 'login')}>
             {mode === 'login' ? 'Go to Register' : 'Go to Login'}
-          </button>  
+          </Button>  
         </div>     
       </div>
     }
 
-    return <div className={`start_bg_${mode}`}>
+    return( 
+    <div className={`start_bg_${mode}`}>   
+      { bgImgs && <CloudCarousel index={modeData.index} image_list={bgImgs} carousel_styles={'bg-carousel'} indicators={false} controls={false}/>}
       <h1 className='start-big-title'>{mode.toUpperCase()}</h1>
-      <div className='start_card card'>
-        <div className='card-body'>
-          <h3 className='start_title'>{welcomeMessages[`${mode}`]}</h3>
+      <Card className='start-card'>
+        <Card.Body className='card-body'>
+          <h3 className='start_title'>{modeData.welcomeMsg}</h3>
           {<div className='error-container'>
               {error && <p className='start-error-text'>{error}</p>}               
               {feedback && <p className='start-feedback-text'>{feedback}</p>}
           </div>}
-            <form onSubmit={e => e.preventDefault()}>
-              {getFormType[`${mode}`]}
-            </form>   
-            {startOptions()}
-            </div>
+            {startForm()}
+            {bottomStartCard()}
+          </Card.Body>
             {mode==='login' && 
             <div className='recover_container card-footer text-muted'>
-              <button className='recover_password' onClick={e => modeHandler(mode === 'login' ? 'recover' : 'login')}>
+              <Button className='recover_password' onClick={e => modeHandler(mode === 'login' ? 'recover' : 'login')}>
                 Forgot you password?
-              </button>
+              </Button>
             </div>}
-        </div>
-    </div>
+        </Card>     
+    </div>)
 } 
 
 export default Start

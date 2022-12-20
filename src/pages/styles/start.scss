@@ -1,22 +1,15 @@
 
 @import './variables';
-$recover_pallette: $clr-red;
+$recover_pallette: $clr-dgreen;
 $login_pallette: $clr-blue;
 $register_pallette: $clr-purple;
 
 
 @mixin start-screen-color-scheme ($background_color) {
-    transition: 0.5s;
-    background-color: $background_color;    
+    transition: 0.5s; 
     height: 100%;
-    
+    background-color: $background_color;
     @include flexbox(column, nowrap, center, center);
-
-
-    .start-label{
-        opacity: 50%;
-        color: $background_color;
-    }
 
     .btn {
         white-space: nowrap;
@@ -39,29 +32,17 @@ $register_pallette: $clr-purple;
         box-shadow: 0px 5px 10px rgba($background_color,0.7) ;
     }
 
-    .btn-assist.btn{
-        background-color:$background-color;
-        border: 0;
-        transition: 0.3s;
-        color: $clr-white;
-        white-space: nowrap;
-    }
-
-    .btn-assist.btn:hover{
-        background-color:lighten($color: $background-color, $amount: 20);
-        color: $clr-ldark;
-    }
-    
     .start_title{
-        color: lighten($color: $background-color, $amount: 20);
+        color: lighten($color: $background-color, $amount: 10);
         text-align: center;
         margin: 0;
     }
 
-    .start_card.card{  
+    .start-card.card{  
         box-shadow: rgba($clr-dark, 0.445) 0px 4px 12px;
-        width: 30%;
-        min-width: 350px;
+        min-width: 300px;
+        width: 100%;
+        max-width: 500px;
     }
 }
 
@@ -76,7 +57,7 @@ $register_pallette: $clr-purple;
 
     .btn-start-mode.btn:hover {
         color: white;
-        background-color: darken($background_color, 20);
+        background-color: darken($background_color, 10);
     }
 
     @include flexbox(row);
@@ -105,9 +86,7 @@ $register_pallette: $clr-purple;
 
 .start_bg_login{
     @include start-screen-color-scheme($login_pallette ...);
-    .btn-assist.btn{
-        min-width: 50px;
-    }
+    
 }
 
 .start_bg_register{
@@ -118,16 +97,17 @@ $register_pallette: $clr-purple;
     @include start-screen-color-scheme($recover_pallette ...)
 }
 
-.recover_password{
+.recover_password.btn:first-child{
     background: none;
     border: none;
     color: $clr-red;
     text-decoration: underline;
-    
+    transition: 0.5s;
 }
 
-.recover_password:hover{
-    color: darken($clr-red, 50)
+.recover_password.btn:first-child:hover{
+    color: darken($clr-red, 50);
+    background: none;
 }
 
 .recover_container{
@@ -142,6 +122,7 @@ $register_pallette: $clr-purple;
 
 .start-big-title{
     color: $clr-white;
+    z-index: 1;
 }
 
 .start-error-text{
@@ -175,3 +156,15 @@ $register_pallette: $clr-purple;
     margin: 20px 0;
 }
 
+@keyframes appear_bg {
+    0% {filter: blur(5px)opacity(0%);}
+    50% {filter: blur(5px)opacity(0%);}
+    100%{filter: blur(5px)opacity(30%);}
+}
+
+.bg-carousel.carousel{
+    animation-name: appear_bg;
+    animation-duration: 2s;
+    position: absolute;
+    filter: blur(5px)opacity(30%);
+}

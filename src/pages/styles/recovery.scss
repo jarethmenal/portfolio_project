@@ -1,10 +1,35 @@
 @import './variables';
 
 .recovery-background {
-    background-color: $clr-red;
+    background-color: $clr-dgreen;
     height: 100%;
+    @include flexbox(column, '', center, center);
 }
 
-.recovery-form{
-    @include flexbox(column, '', center, center)
+.recovery-input{
+    padding: 10px 0;
+}
+
+.recovery-title{
+    color: $clr-dkstgreen;
+}
+
+.recovery-subtitle{
+    color: $clr-green;
+}
+
+.recovery-feedback{
+    color: $clr-white;
+}
+
+.recovery_submit, .recovery_submit:active, .recovery_submit:focus{
+    background-color: $clr-dblue;
+    border: 0;
+    color: $clr-white;
+    margin-top: 10px;
+    transition: 0.5s;
+}
+
+.recovery_submit:hover{
+    background-color: darken($color: $clr-dblue, $amount: 10);
 }

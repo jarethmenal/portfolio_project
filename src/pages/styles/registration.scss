@@ -1,9 +1,9 @@
 @import './variables';
 
 .registration-background{
-    background-color: $clr-purple;
     height: 100%;
-    @include flexbox('', '', center, center)
+    @include flexbox('', '', center, center);
+    background-color: $clr-purple;
 }
 
 .registration-form{

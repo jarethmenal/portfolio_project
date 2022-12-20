@@ -44,12 +44,12 @@ h1{
 }
 
 h2{
-    font-size: 32px;
+    font-size: 48px;
     font-weight: map-get($map: $font-weights, $key: bold);
 }
 
 h3{
-    font-size: 28px;
+    font-size: 32px;
     font-weight: map-get($map: $font-weights, $key: bold);
 }
 
@@ -61,4 +61,40 @@ p{
 label {
     font-weight: map-get($map: $font-weights, $key: normal);
     opacity: 100%;
+}
+
+.default_inside-label{
+    opacity: 50%;
+}
+
+.input-assist-button.btn{
+    min-width: 50px;
+    border-radius: 20px;
+    border: 0;
+    transition: 0.5s;
+    white-space: nowrap;
+    color: $clr-white;
+    background-color:$clr-dblue; 
+}
+
+.input-assist-button.btn:hover{
+    color: $clr-dwhite; 
+    background-color:$clr-dkstblue;
+}
+
+.carousel{
+    position: absolute;
+}
+
+.carousel-image{
+    object-fit: cover;
+}
+
+.carousel-inner, .carousel-item, .carousel, .carousel-image {
+    width: 100%;
+    height: 100%;
+}
+
+.btn:first-child{
+    border: none;
 }

@@ -5,6 +5,10 @@ import fetchOnDemand from '../functions/fetchOnDemand';
 import { faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import CloudImage from '../components/CloudImage';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 const getEmailQuery = () => {
     return {
        "operationName": "Query",
@@ -58,12 +62,13 @@ const Registration = () => {
     const [email, setEmail] = useState<string>('');
     const [form, setForm] = useState<formData>({password:'', confirmPassword: '',profilepic: null,name:'', lastName:''});
     const [error, setError] = useState<string|null>(null);
-
+    const tokenAuth = `Bearer ${params.token}`;
     const visibilityHandler = () => {
         setVisibility(prev => !prev);
-      }
+    }
+
     const getEmail = async() => {
-        const valid = await fetchOnDemand({inQuery: getEmailQuery(), header: {Authorization: `Bearer ${params.name}`} });
+        const valid = await fetchOnDemand({inQuery: getEmailQuery(), header: {Authorization: tokenAuth} });
         
         if(valid.errors){
             
@@ -74,28 +79,23 @@ const Registration = () => {
 
         setEmail(valid.data.getEmailRegister)
     }
-    // const {response, error, loading} = useFetchAxios({inQuery: nonAvailableImageQuery(), header: {Authorization: `Bearer ${params.name}`}})
+    // const {response, error, loading} = useFetchAxios({inQuery: nonAvailableImageQuery(), header: {Authorization: `Bearer ${params.token}`}})
 
+    
 
     useEffect(()=>{
-        (!params.name) && navigate('/start');
+        (!tokenAuth) && navigate('/start');
         getEmail(); 
    
     },[params])
 
     const registerHandler = async() => {
-        
-        const resp = await fetchOnDemand({inQuery: createUserQuery(form.name, email, form.password,form.profilepic, form.confirmPassword), header: {Authorization: `Bearer ${params.name}`}});
+        const resp = await fetchOnDemand({inQuery: createUserQuery(`${form.name} ${form.lastName}`, email, form.password,form.profilepic, form.confirmPassword), header: {Authorization: tokenAuth}});
         if (resp.errors){
           console.log(resp)
           setError(resp.errors.message);
           return;
         }
-        if(form.password !== form.confirmPassword){
-            setError('Please make sure that both passwords are the same.');
-            return;
-        }
-        console.log(resp);
         navigate('/start');
       }
 
@@ -114,7 +114,7 @@ const Registration = () => {
     return <div className='registration-background'>
         <div className='registration-form-container'>
             
-            <form className='registration-form'> 
+            <Form className='registration-form' onSubmit={e => e.preventDefault()}> 
             
             <label htmlFor="profilepic" className='profile-pic-container'>
                 {form.profilepic  ?
@@ -127,7 +127,7 @@ const Registration = () => {
                 </div>
             </label>
             
-            <input 
+            <Form.Control 
             className='registration-file-input' 
             type="file" 
             id="profilepic"
@@ -136,64 +136,64 @@ const Registration = () => {
                 const {id, files} = e.target as HTMLInputElement;
                 transformImage(id, files);
             }}/>
+
             {error && <p className='register-error-text'>{error}</p>}
             
-            <div className="form-floating input-r">
-                <input 
+            <FloatingLabel label='Name' className="input-r">
+                <Form.Control 
                 type="text" 
                 className="form-control" 
                 id="name" 
                 value={form.name}
                 onChange={e => updateForm(e.target.id, e.target.value)}
                 placeholder="Sample Name"/>
-                <label htmlFor="lastName">Name</label>
-            </div>
+            </FloatingLabel>
 
-            <div className="form-floating input-r">
-                <input 
+            <FloatingLabel className="input-r" label='Last Name'>
+                <Form.Control 
                 type="text" 
                 className="form-control form-format" 
                 id="lastName" 
                 value={form.lastName}
                 onChange={e => updateForm(e.target.id, e.target.value)}
                 placeholder="Sample Last Name"/>
-                <label htmlFor="lastName">Last Name</label>
-            </div>
+            </FloatingLabel>
 
-            <div className="input-group input-r">
-                <div className='form-floating'> 
-                    <input 
+            <InputGroup className="input-r">
+
+                <FloatingLabel label='Password'>
+                <Form.Control
                     value={form.password}
                     id={'password'}
                     onChange={e => updateForm(e.target.id, e.target.value)}
                     type={visibility ? 'text' :  'password'}
                     className="form-control" 
-                    placeholder="This is a Placeholder"
-                    />
-                    <label htmlFor="input2" >Password</label>
-                </div>
-            
-                <button onClick={visibilityHandler} className="btn btn-primary" type="button">
-                {(visibility ? <FontAwesomeIcon size='1x' icon={faEye}/>:<FontAwesomeIcon size='1x' icon={faEyeSlash}/>)}
-                </button>
-            </div>     
+                    placeholder="This is a Placeholder"/>
+                </FloatingLabel>
 
-            <div className="form-floating input-r">
-                <input 
+                {/* <div className='form-floating'> 
+                    
+                </div> */}
+                <Button onClick={visibilityHandler} className="input-assist-button" type="button">
+                {(visibility ? <FontAwesomeIcon size='1x' icon={faEye}/>:<FontAwesomeIcon size='1x' icon={faEyeSlash}/>)}
+                </Button>
+            </InputGroup>     
+
+            <FloatingLabel className="input-r" label='Confirm Password'>
+                <Form.Control 
                 type={!visibility ? 'password' : 'text'} 
                 className="form-control" 
                 id="confirmPassword" 
                 value={form.confirmPassword}
                 onChange={e => updateForm(e.target.id, e.target.value)}
                 placeholder="Sample Password"/>
-                <label htmlFor="lastName">Confirm Password</label>
-            </div>
+            </FloatingLabel>
 
             <div className='register-button-container'>
-                <button className='btn-primary btn' onClick={registerHandler}>{'Register'}</button>
+                <Button className='btn-primary btn' onClick={registerHandler}>{'Register'}</Button>
             </div>
             
-            </form> 
+            </Form> 
 
                   
    
