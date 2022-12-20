@@ -1,37 +1,42 @@
-import { useEffect, useState } from 'react';
-import './App.css';
-
-const USERS_QUERY = `
-{
-  getAllUsers {
-    name
-    id
-  }
-}
-`
-
+import { useEffect } from 'react';
+import { Route, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom'
+import Start from './pages/Start';
+import NotFound from './pages/NotFound';
+import './globals.scss';
+import Registration from './pages/Registration';
+import Recovery from './pages/Recovery';
 function App() {
+  
+  const navigate = useNavigate();
+  const currentLocation = useLocation().pathname;
 
-  const [users, setUsers] = useState()
+  const tokenMissingHandler = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
+  }
 
   useEffect(()=>{
-    fetch('https://portfolio-project1-backend.herokuapp.com/graphql',
-    {
-      method: 'POST',
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({query: USERS_QUERY})
-    }).then(res => res.json()).then(procRes => setUsers(procRes.data.getAllUsers))
-  }, [])
+    if (currentLocation !== "/login"){
+      !localStorage.getItem("token") && tokenMissingHandler()
+    }
+  }, [currentLocation])
 
-  useEffect (()=>{
-    console.log(users)
-  },[users])
-  
   return (
-    <div className="App">
-      
+    <div className={'light-theme'}>
+      <Routes>
+        <Route path='/' element={<Navigate to='/start'/>}/>
+        <Route path='/start' element={<Start />}/>
+        <Route path='/registration' element={<Registration/>}/>
+        <Route path='/registration/:name' element={<Registration/>}/>
+        <Route path='/recovery' element={<Recovery/>}/>
+        <Route path='/recovery/:name' element={<Recovery/>}/>
+        <Route path='/notfound' element={<NotFound/>} />
+        <Route path='*' element={<Navigate to="/notfound"/>}/>
+      </Routes>
     </div>
   );
 }
 
 export default App;
+
+

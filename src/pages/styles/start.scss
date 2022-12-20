@@ -1,0 +1,177 @@
+
+@import './variables';
+$recover_pallette: $clr-red;
+$login_pallette: $clr-blue;
+$register_pallette: $clr-purple;
+
+
+@mixin start-screen-color-scheme ($background_color) {
+    transition: 0.5s;
+    background-color: $background_color;    
+    height: 100%;
+    
+    @include flexbox(column, nowrap, center, center);
+
+
+    .start-label{
+        opacity: 50%;
+        color: $background_color;
+    }
+
+    .btn {
+        white-space: nowrap;
+    }
+
+    .btn-go.btn {
+        min-width: 80px;
+        border-radius: 20px;
+        color: $clr-white;
+        background-color:$background_color;
+        box-shadow: 0px 5px 10px rgba($clr-dark,0.5);
+        transform: translateY(-3px);
+        transition: 0.4s;
+    }
+    
+    .btn-go.btn:hover{
+        color: $clr-white;
+        background-color: darken($background_color, 20);
+        transform: translateY(0px);
+        box-shadow: 0px 5px 10px rgba($background_color,0.7) ;
+    }
+
+    .btn-assist.btn{
+        background-color:$background-color;
+        border: 0;
+        transition: 0.3s;
+        color: $clr-white;
+        white-space: nowrap;
+    }
+
+    .btn-assist.btn:hover{
+        background-color:lighten($color: $background-color, $amount: 20);
+        color: $clr-ldark;
+    }
+    
+    .start_title{
+        color: lighten($color: $background-color, $amount: 20);
+        text-align: center;
+        margin: 0;
+    }
+
+    .start_card.card{  
+        box-shadow: rgba($clr-dark, 0.445) 0px 4px 12px;
+        width: 30%;
+        min-width: 350px;
+    }
+}
+
+@mixin start-button-color-scheme ($background_color) {
+    .btn-start-mode.btn {
+        min-width: 140px;
+        transition: 0.5s;
+        border-radius: 20px;
+        color: $clr-white;
+        background-color: $background_color;
+    }
+
+    .btn-start-mode.btn:hover {
+        color: white;
+        background-color: darken($background_color, 20);
+    }
+
+    @include flexbox(row);
+    margin-top: 20px;
+
+    .left{
+        width: 50%
+    }
+    .right{
+        width: 50%;
+        text-align: right;
+    }
+}
+
+.options_container_login{
+    @include start-button-color-scheme($register_pallette ...);
+}
+
+.options_container_register{
+    @include start-button-color-scheme($login_pallette ...);
+}
+
+.options_container_recover{
+    @include start-button-color-scheme($login_pallette ...);
+}
+
+.start_bg_login{
+    @include start-screen-color-scheme($login_pallette ...);
+    .btn-assist.btn{
+        min-width: 50px;
+    }
+}
+
+.start_bg_register{
+    @include start-screen-color-scheme($register_pallette ...)
+}
+
+.start_bg_recover{
+    @include start-screen-color-scheme($recover_pallette ...)
+}
+
+.recover_password{
+    background: none;
+    border: none;
+    color: $clr-red;
+    text-decoration: underline;
+    
+}
+
+.recover_password:hover{
+    color: darken($clr-red, 50)
+}
+
+.recover_container{
+    @include flexbox(column, nowrap, center, center);
+}
+.form{
+    width: 100%;
+    max-width: 500px;
+    @include flexbox(column, nowrap, '', center);
+    
+}
+
+.start-big-title{
+    color: $clr-white;
+}
+
+.start-error-text{
+    text-align: center;
+    color: $clr-red;
+    max-width: 300px;
+}
+
+.start-feedback-text{
+    text-align: center;
+    color: $clr-blue;
+    max-width: 300px;
+}
+
+.send_registration{
+    height: 100%;
+    white-space: nowrap;
+    // @include border-radius($border-radius, 0);
+}
+
+.error-container{
+    @include flexbox(row, '', center)
+}
+
+.input_start{
+    width: 100%;
+}
+
+
+.input-separation-start{
+    margin: 20px 0;
+}
+

@@ -1,0 +1,116 @@
+@import './variables';
+
+.registration-background{
+    background-color: $clr-purple;
+    height: 100%;
+    @include flexbox('', '', center, center)
+}
+
+.registration-form{
+
+    @include flexbox(column,"", center, center);
+    width: 100%;
+    min-width: 300px;
+
+    .btn-assist{
+        background-color: $clr-dwhite;
+        border-radius: 0 10px 10px 0;
+        transition: 0.3s;
+        height: 50px;
+        color: $clr-ldark;
+        white-space: nowrap;
+        width: 50px;
+    }
+    
+    .btn-assist.btn:hover{
+        background-color:lighten($color: $clr-dark, $amount: 20);
+        color: $clr-dwhite;
+    }
+    
+    .registration-file-input[type="file"]{
+        height: 50px;
+        background-color: $clr-white;
+        // display: none;
+    }
+    .registration-file-
+    
+    
+    ::-webkit-file-upload-button {
+        background:$clr-dwhite;
+        color: $clr-ldark;
+        height: 50px;
+        border: 0;
+    }
+
+    .registration-file-input{
+        display: none;
+    }
+    
+    .registration-preview{
+        border-radius: 50%;
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+        margin: 20px;
+        background-color: white;
+        box-shadow: 0 10px 10px rgba(0, 0, 0, 0.411);
+        transition: 0.3s;
+    }
+
+    .registration-label{
+        width: 100%;
+        text-align: left;
+        color: $clr-white;
+    }
+
+    .register-button-container{
+        width: 100%;
+    }
+
+    .register-error-text{
+        text-align: center;
+        color: $clr-white;
+        max-width: 300px;
+    }
+
+    .profile-pic-container{
+        position: relative;
+    }
+    .insert-image-overlay{
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 200px;
+        height: 200px;
+        margin: 20px;
+        opacity: 0;
+        transition: .5s ease;
+        background-color: #0000009c;
+        border-radius: 50%;
+    }
+    .insert-image-overlay:hover{
+        opacity: 1;
+        cursor: pointer;
+    }
+
+    .insert-image-overlay-text{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: $clr-white;
+        word-break: break-all; 
+        padding: 15px;
+        text-align: center;
+    }
+
+    .input-r{
+        width: 300px;
+        margin: 10px 0;
+    }
+
+   
+}

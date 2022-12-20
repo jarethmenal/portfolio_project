@@ -1,0 +1,21 @@
+$clr-yellow: #ffb922;
+$clr-blue: #2a8dff;
+$clr-red: rgb(248, 74, 118);
+$clr-dark: rgb(24, 24, 24);
+$clr-ldark:rgb(63, 63, 63);
+$clr-dwhite: rgb(196, 196, 196);
+$clr-white: rgb(255, 255, 255);
+$clr-purple: rgb(152, 95, 206);
+$font-weights: (
+    "thin": 200,
+    "normal": 500,
+    "bold": 800
+);
+@mixin flexbox ($direction: column, $flexwrap: nowrap, $justifyContent: flex-start, $alignItems: flex-start, $alignContent: flex-start){
+    display: flex;
+    flex-direction: $direction; // row | row-reverse | column | column-reverse
+    flex-wrap: $flexwrap; // nowrap | wrap | wrap-reverse 
+    justify-content: $justifyContent; // flex-start | flex-end | center | space-between | space-around | space-evenly | start | end | left | right ... + safe | unsafe
+    align-items: $alignItems; //  stretch | flex-start | flex-end | center | baseline | first baseline | last baseline | start | end | self-start | self-end + ... safe | unsafe
+    align-content: $alignContent; // flex-start | flex-end | center | space-between | space-around | space-evenly | stretch | start | end | baseline | first baseline | last baseline + ... safe | unsafe
+}

@@ -1,0 +1,10 @@
+@import './variables';
+
+.recovery-background {
+    background-color: $clr-red;
+    height: 100%;
+}
+
+.recovery-form{
+    @include flexbox(column, '', center, center)
+}
